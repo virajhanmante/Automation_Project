@@ -37,3 +37,27 @@ s3bucket='upgrad-viraj'
 aws s3 \
 cp /tmp/${name}-httpd-logs-${timestamp}.tar \
 s3://${s3bucket}/${name}-httpd-logs-${timestamp}.tar
+
+
+size=$(ls -lh /tmp/${name}-httpd-logs-${timestamp}.tar |awk '{print $5}')
+cd /var/www/html/
+inventory_file='/var/www/html/inventory.html'
+if [ -f "$inventory_file" ]
+        then
+                echo "file is already existed"
+else
+        echo "Log Type         Time Created         Type        Size" >> inventory.html
+        echo -e "httpd-logs		${timestamp}		tar		${size}" >> inventory.html
+
+fi
+
+cd /etc/cron.d/
+cron_file='/etc/cron.d/automation'
+if [ -f "$cron_file" ]
+        then
+                echo "cron_file is already existed"
+else
+        echo "0 0 * * * root /root/Automation_Project/automation.sh" >> automation
+       
+fi
+
